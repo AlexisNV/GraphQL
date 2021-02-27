@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Personas</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h3>Búsqueda de personas</h3>
+      <div>
+        <input type="text" name="find-text" id="find-text" />
+        <button type="button" name="find-id-btn" id="find-id-btn">Buscar por ID</button>
+        <button type="button" name="find-name-btn" id="find-name-btn">Buscar por Nombre</button>
+        <button type="button" name="find-age-btn" id="find-age-btn">Buscar por Edad</button>
+      </div>
+    </div>
+    <div class="container">
+      <table id="find-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Edad</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td><input type="text" disabled /></td>
+            <td><input type="text" name="add-name" id="add-name" /></td>
+            <td><input type="text" name="add-surnames" id="add-surnames" /></td>
+            <td><input type="number" name="add-age" id="add-age" /></td>
+            <td><button type="button" name="add-btn" id="add-btn">Insertar</button></td>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/graphql-request@3.4.0/dist/index.min.js"></script>
+  <script src="./assets/constants/constants.js"></script>
+  <script src="./models/person.model.js"></script>
+  <script src="./services/person.service.js"></script>
+  <script src="./views/person.view.js"></script>
+  <script src="./controllers/person.controller.js"></script>
+  <script src="./app.js"></script>
+</html>

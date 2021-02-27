@@ -1,0 +1,18 @@
+* {
+  border-collapse: collapse;
+}
+
+.container {
+  padding: 2rem;
+}
+
+label {
+  display: block;
+}
+
+table,
+tr,
+th,
+td {
+  border: 1px black solid;
+}
