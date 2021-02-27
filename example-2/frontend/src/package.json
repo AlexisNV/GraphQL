@@ -1,12 +1,12 @@
 {
-  "name": "graphql-test",
+  "name": "example-2",
   "version": "0.1.0",
-  "description": "A GraphQL test",
+  "description": "Frontend package.json",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Alexis,Manolo,Fernando",
+  "author": "Alexis, Manolo, Fernando",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {}

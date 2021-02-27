@@ -1,5 +1,5 @@
-const express = require('express');
 const cors = require('cors');
+const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema, GraphQLError } = require('graphql');
 
@@ -21,27 +21,14 @@ class Person {
   }
 }
 
-let persons = [
-  {
-    id: '1',
-    name: 'Manolo',
-    surnames: 'Lozano',
-    age: 27,
-  },
-  {
-    id: '2',
-    name: 'Alexis',
-    surnames: 'noze',
-    age: 20,
-  },
-];
+let persons = [];
 
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(`
   input PersonInput {
-    name: String
-    surnames: String
-    age: Int
+    name: String!
+    surnames: String!
+    age: Int!
   }
   type Person {
     id: ID!
@@ -51,14 +38,14 @@ const schema = buildSchema(`
   }
   type Query {
     findAll: [Person]
-    findById(id: Int): [Person]
-    findByName(name: String): [Person]
-    findByAge(age: Int): [Person]
+    findById(id: Int!): [Person]
+    findByName(name: String!): [Person]
+    findByAge(age: Int!): [Person]
   }
   type Mutation {
-    insertPerson(person: PersonInput): Person
-    updatePerson(id: Int, person: PersonInput): Person
-    deletePerson(id: Int): Person
+    insertPerson(person: PersonInput): [Person]
+    updatePerson(id: Int, person: PersonInput): [Person]
+    deletePerson(id: Int): [Person]
   }
 `);
 
@@ -66,8 +53,7 @@ const schema = buildSchema(`
 const root = {
   insertPerson({ person }) {
     persons = [...persons, new Person(person)];
-    console.log(persons);
-    return person;
+    return persons;
   },
   findAll() {
     return persons;
@@ -80,7 +66,6 @@ const root = {
     return person;
   },
   findByName({ name }) {
-    console.log(name);
     const person = persons.filter(_person => _person.name.includes(name));
     if (!person) {
       throw new GraphQLError('ERROR: No existe ninguna persona con este Nombre: ' + name);
@@ -94,9 +79,8 @@ const root = {
     }
     return person;
   },
-
   updatePerson({ id, person }) {
-    const personToUpdate = persons.filter(_person => +_person.id === +id);
+    const personToUpdate = persons.find(_person => +_person.id === +id);
     const found = {
       true: () => {
         Object.assign(personToUpdate, person);
@@ -106,14 +90,11 @@ const root = {
       },
     };
     found[new Boolean(personToUpdate)]();
-    return personToUpdate;
+    return persons;
   },
   deletePerson({ id }) {
-    const personToDelete = persons.find(_person => +_person.id === +id);
-    if (!personToDelete) {
-      throw new GraphQLError('ERROR: Persona no encontrada');
-    }
-    persons = persons.filter(person => +person._id == +id);
+    const personsFiltered = persons.filter(person => person.id != id);
+    persons = personsFiltered;
     return persons;
   },
 };
@@ -125,7 +106,7 @@ app.use(
   graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: false,
+    graphiql: true,
   }),
 );
 app.listen(4000);

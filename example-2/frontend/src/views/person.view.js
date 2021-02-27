@@ -3,6 +3,7 @@ class PersonView {
     this.$table = document.getElementById('find-table');
     this.$tablebody = document.getElementById('table-body');
 
+    this.$updateid = document.getElementById('update-id');
     this.$addname = document.getElementById('add-name');
     this.$addsurnames = document.getElementById('add-surnames');
     this.$addage = document.getElementById('add-age');
@@ -16,22 +17,9 @@ class PersonView {
     this.$findagebtn = document.getElementById('find-age-btn');
 
     this.deleteHandler;
+    this.updateHandler;
   }
 
-  /* refreshTable = person => {
-    console.log(person);
-    const tablebody = this.$tablebody;
-    tablebody.innerHTML = '';
-    let newRow = document.createElement('tr');
-    newRow.innerHTML = `<td>${person.id}</td><td>${person.name}</td><td>${person.surnames}</td><td>${person.age}</td>`;
-    let newTd = document.createElement('td');
-    const btnDelete = document.createElement('button');
-    btnDelete.innerText = 'Borrar';
-    btnDelete.addEventListener('click', e => this.deleteHandler(person.id));
-    newTd.appendChild(btnDelete);
-    newRow.appendChild(newTd);
-    tablebody.appendChild(newRow);
-  }; */
   refreshTable = persons => {
     console.log(persons);
     const tablebody = this.$tablebody;
@@ -42,12 +30,26 @@ class PersonView {
     persons.forEach(person => {
       let newRow = document.createElement('tr');
       newRow.innerHTML = `<td>${person.id}</td><td>${person.name}</td><td>${person.surnames}</td><td>${person.age}</td>`;
-      let newTd = document.createElement('td');
+
+      let tdDelete = document.createElement('td');
       const btnDelete = document.createElement('button');
       btnDelete.innerText = 'Borrar';
       btnDelete.addEventListener('click', e => this.deleteHandler(person.id));
-      newTd.appendChild(btnDelete);
-      newRow.appendChild(newTd);
+      tdDelete.appendChild(btnDelete);
+      newRow.appendChild(tdDelete);
+
+      let tdUpdate = document.createElement('td');
+      const btnUpdate = document.createElement('button');
+      btnUpdate.innerText = 'Actualizar';
+      btnUpdate.addEventListener('click', e => {
+        this.$updateid.value = person.id;
+        this.$addname.value = person.name;
+        this.$addsurnames.value = person.surnames;
+        this.$addage.value = person.age;
+      });
+      tdUpdate.appendChild(btnUpdate);
+      newRow.appendChild(tdUpdate);
+
       tablebody.appendChild(newRow);
     });
   };
@@ -55,7 +57,7 @@ class PersonView {
   getPersonItem = () => {
     const name = this.$addname.value;
     const surnames = this.$addsurnames.value;
-    const age = this.$addage.value;
+    const age = +this.$addage.value;
     const person = new Person({ name, surnames, age });
     return person;
   };
@@ -81,14 +83,25 @@ class PersonView {
   bindAddButton(handler) {
     this.$addbtn.addEventListener('click', () => {
       const person = this.getPersonItem();
+      if (this.$updateid.value === '') {
+        console.log('añadir');
+        handler(person);
+      } else {
+        console.log('actualizar');
+        this.updateHandler(this.$updateid.value, person);
+      }
+      this.$updateid.value = '';
       this.$addname.value = '';
       this.$addsurnames.value = '';
       this.$addage.value = '';
-      handler(person);
     });
   }
 
   bindDeleteButton(handler) {
     this.deleteHandler = handler;
+  }
+
+  bindUpdateButton(handler) {
+    this.updateHandler = handler;
   }
 }

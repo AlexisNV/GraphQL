@@ -1,6 +1,6 @@
 class PersonService {
   persons = [];
-  constructor() { }
+  constructor() {}
 
   bindPersons = handler => (this.printTable = handler);
 
@@ -86,7 +86,7 @@ class PersonService {
       });
   };
 
-  add = person =>
+  add = ({ name, surnames, age }) => {
     fetch(END_POINT, {
       method: 'POST',
       headers: {
@@ -95,12 +95,78 @@ class PersonService {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        mutation: `{ insertPerson(person: {name: ${person.name}, surnames: ${person.surnames}, age: ${+person.age}}){ id, name, surnames, age }}`,
+        query: `mutation {
+          insertPerson(person: {name: "${name}", surnames: "${surnames}", age: ${age}}){
+              id
+              name
+              surnames
+              age
+          }
+        }`,
       }),
     })
       .then(r => r.json())
-      .then(({ data }) => this._commit(data.insertPerson))
+      .then(({ data }) => {
+        this._commit(data.insertPerson);
+      })
       .catch(e => {
         console.error(e);
       });
+  };
+
+  delete = id => {
+    fetch(END_POINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: `mutation{
+          deletePerson(id: ${id}){
+              id
+              name
+              surnames
+              age
+          }
+      }`,
+      }),
+    })
+      .then(r => r.json())
+      .then(({ data }) => {
+        this._commit(data.deletePerson);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  update = (id, { name, surnames, age }) => {
+    fetch(END_POINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: `mutation {
+          updatePerson(id:${id}, person: {name: "${name}", surnames: "${surnames}", age: ${age}}){
+              id
+              name
+              surnames
+              age
+          }
+      }`,
+      }),
+    })
+      .then(r => r.json())
+      .then(({ data }) => {
+        this._commit(data.updatePerson);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
 }
