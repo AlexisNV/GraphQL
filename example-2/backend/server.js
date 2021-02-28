@@ -2,24 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema, GraphQLError } = require('graphql');
-
-class Person {
-  constructor(person) {
-    this.id = Person.incrementId();
-    this.name = person.name;
-    this.surnames = person.surnames;
-    this.age = person.age;
-  }
-
-  static incrementId() {
-    if (!this.latestId) {
-      this.latestId = 1;
-    } else {
-      this.latestId++;
-    }
-    return this.latestId;
-  }
-}
+const { Person } = require('./models/person.model');
 
 let persons = [];
 

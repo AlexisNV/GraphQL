@@ -15,4 +15,4 @@ class Person {
     return this.latestId;
   }
 }
-export default Person;
+exports.Person = Person;
