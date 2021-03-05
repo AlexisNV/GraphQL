@@ -2,9 +2,9 @@ class PersonService {
   persons = [];
   constructor() {}
 
-  bindPersons = handler => (this.printTable = handler);
+  bindPersons = handler => (this.updatePersons = handler);
 
-  _commit = persons => this.printTable(persons);
+  _commit = persons => this.updatePersons(persons);
 
   findAll = () => {
     fetch(END_POINT, {
